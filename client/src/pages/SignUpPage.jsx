@@ -31,6 +31,7 @@ function SignupPage() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button className='login-button' onClick={handleSignup}>Sign Up</button>
+      <a href="/login" className="signup-link">Already have an accout? Login</a>
     </div>
   );
 }

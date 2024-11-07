@@ -32,7 +32,7 @@ The idea behind Recipe Guru was born from the need for a user-friendly tool to m
 
 Users can **sign up, log in, and manage their accounts** seamlessly via the application interface. Account management includes updating personal information and managing preferences.
 
-![User Account Management](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExankxZmE5NDBuY3RldGN4dWx1d211dnEwdDlja3JsN204ZXE4aWRtNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/52qtwCtj9OLTi/giphy.gif)
+![User Account Management](./gifs/feature1.gif)
 
 ---
 
