@@ -54,7 +54,7 @@ export const loginUser = async (email, password) => {
 
 export const signupUser = async (username, email, password) => {
   try {
-    const response = await apiClient.post('/auth/signup', { username, email, password });
+    const response = await apiClient.post('/auth/register', { username, email, password });
     return response.data;
   } catch (error) {
     handleError(error);
@@ -96,7 +96,7 @@ export const fetchRecipeById = async (recipeId) => {
 
 export const saveRecipeToFavorites = async (recipeId) => {
   try {
-    const response = await apiClient.post('/recipes/save', { recipeId });
+    const response = await apiClient.post('/recipes/save', { "recipeId": recipeId });
     return response.data;
   } catch (error) {
     handleError(error);

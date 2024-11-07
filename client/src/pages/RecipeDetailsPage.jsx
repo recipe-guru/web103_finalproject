@@ -1,47 +1,69 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../css/RecipeDetailsPage.css'
 
+import { fetchRecipeById, saveRecipeToFavorites } from '../api/api';
+import ShimmerLoader from '../components/ShimmerLoader';
+
 export default function RecipeDetailsPage() {
+    const [recipe, setRecipe] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [recipeFetched, setRecipeFetched] = useState(false);
+
+    const navigate = useNavigate();
+
+    const id = window.location.pathname.split('/')[2];
+
+    useEffect(() => {
+        document.title = recipe.title ? recipe.title : 'Recipe Details';
+        try {
+            fetchRecipeById(id)
+                .then((data) => {
+                    console.log(data);
+                    setRecipe(data);
+                    setLoading(false);
+                    setRecipeFetched(true);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    if (loading) return <ShimmerLoader />;
+
     return (
-        <div>
-            <div className="navbar">
-                <h1>Recipe Guru</h1>
+        <div className="recipe container"
+            style={{ padding: '20px' }}
+        >
+            <img src={recipe.image_url} alt="Recipe Image" className="recipe-image" />
+
+            <h1>{recipe.title}</h1>
+
+            <div className="meta-info">
+                <span>Ready in Minutes: {recipe.readyInMinutes} mins</span>
+                <span>Servings: {recipe.servings}</span>
             </div>
 
-            <div className="container">
-                <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" class="recipe-image" />
-
-                <h1>Delicious Pasta</h1>
-
-                <div className="meta-info">
-                    <span>Prep Time: 20 mins</span>
-                    <span>Cook Time: 30 mins</span>
-                </div>
-
-                <div className="ingredients">
-                    <h2>Ingredients</h2>
-                    <ul>
-                        <li>200g pasta</li>
-                        <li>2 tbsp olive oil</li>
-                        <li>1 clove garlic, minced</li>
-                        <li>1/2 cup parmesan cheese</li>
-                        <li>Salt and pepper to taste</li>
-                    </ul>
-                </div>
-
-                <div className="instructions">
-                    <h2>Instructions</h2>
-                    <ol>
-                        <li>Boil the pasta in salted water until al dente.</li>
-                        <li>In a pan, heat olive oil and sauté garlic until fragrant.</li>
-                        <li>Add the cooked pasta and mix well.</li>
-                        <li>Sprinkle with parmesan cheese, salt, and pepper.</li>
-                        <li>Serve hot and enjoy your delicious pasta!</li>
-                    </ol>
-                </div>
-
-                <button className="save-button">Save to Favorites</button>
+            <div className="ingredients">
+                <h2>Ingredients</h2>
+                <ul>
+                    {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+                        <li key={index}>{ingredient.name} - {ingredient.amount} {ingredient.unit}</li>
+                    ))}
+                </ul>
             </div>
+
+            <div className="instructions">
+                <h2>Instructions</h2>
+                <p dangerouslySetInnerHTML={{ __html: recipe.instructions }}></p>
+            </div>
+
+            <button
+                onClick={() => saveRecipeToFavorites(id).then(() => navigate('/saved-recipes'))}
+                className="save-button">Save to Favorites</button>
         </div>
     )
 }

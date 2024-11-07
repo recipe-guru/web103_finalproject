@@ -1,32 +1,56 @@
-import React from 'react'
+import React, { useState, useContext, useEffect, startTransition } from 'react'
+import { UserContext } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
+import RecipeCard from '../components/RecipeCard'
 import '../css/HomePage.css'
+
+import { getSavedRecipes } from '../api/api';
+
 export default function HomePage() {
+    const [savedRecipes, setSavedRecipes] = useState([]);
+    const navigate = useNavigate();
+
+    const { user } = useContext(UserContext);
+    const username = user.username;
+
+    useEffect(() => {
+        document.title = 'Home Page';
+        try {
+            getSavedRecipes()
+                .then((data) => {
+                    startTransition(() => {
+                        setSavedRecipes(data);
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    }, [])
+
     return (
-        <div>
-            <div className="container">
-                <div className="welcome">
-                    Welcome, <strong>John!</strong> Ready to find your next favorite recipe?
-                </div>
+        <div className="container">
+            <div className="welcome">
+                Welcome, <strong>{username}</strong>!! Ready to find your next favorite recipe?
+            </div>
 
-                <div className="buttons">
-                    <button className="button">Enter Ingredients</button>
-                    <button className="button">View Saved Recipes</button>
-                </div>
+            <div className="buttons">
+                <button
+                    onClick={() => navigate('/recipe-suggestions')}
+                    className="button">Get Recipe Suggestions</button>
+                <button
+                    onClick={() => navigate('/')}
+                    className="button">View Saved Recipes</button>
+            </div>
 
-                <div className="recommendations">
-                    <h2>Quick Recommendations</h2>
-                    <div className="recipe-card">
-                        <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" />
-                        <h3>Recipe 1</h3>
-                        <p>A delicious meal you can make with your ingredients.</p>
-                    </div>
-
-                    <div className="recipe-card">
-                        <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" />
-                        <h3>Recipe 2</h3>
-                        <p>A quick dish to try for any occasion.</p>
-                    </div>
-                </div>
+            <div className="recommendations">
+                <h2>Quick Recommendations</h2>
+                {savedRecipes.map((recipe) => (
+                    <RecipeCard recipe={recipe} key={recipe.id} />
+                ))
+                }
             </div>
         </div>
     )

@@ -33,7 +33,7 @@ const fetchRecipeById = async (req, res) => {
                 spooncularRecipeId: recipe.id,
                 title: recipe.title,
                 summary: recipe.summary,
-                image: recipe.image,
+                image_url: recipe.image,
                 servings: recipe.servings,
                 instructions: recipe.instructions,
                 readyInMinutes: recipe.readyInMinutes,

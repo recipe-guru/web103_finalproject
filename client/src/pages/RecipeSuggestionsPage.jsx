@@ -1,41 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import '../css/RecipeSuggestionsPage.css'
+import RecipeCard from '../components/RecipeCard'
+
+import { fetchSuggestedRecipes } from '../api/api'
+import { UserContext } from '../context/UserContext'
 
 export default function RecipeSuggestionsPage() {
+
+    const [recipes, setRecipes] = useState([])
+    const [searchString, setSearchString] = useState('')
+    const { user } = useContext(UserContext)
+    
+    const fetchRecipes = async () => {
+        try {
+            const ingredients = searchString.split(',').map(ingredient => ingredient.trim());
+            const data = await fetchSuggestedRecipes(ingredients,[])
+            const dataTrans = await data.map(recipe => {
+                return {
+                    id: recipe.id,
+                    title: recipe.title,
+                    image_url: recipe.image,
+                    readyInMinutes: recipe.readyInMinutes,
+                    servings: recipe.servings
+                }
+            })
+            console.log(dataTrans)
+            setRecipes(dataTrans)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
-        <div>
-            <div className="navbar">
-                <h1>Recipe Guru</h1>
+        <div className="container">
+            <div className="search-bar">
+                <input 
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
+                type="text" placeholder="Enter ingredients..." />
+                <button 
+                    onClick={fetchRecipes}
+                className="search-button">Search</button>
             </div>
 
-            <div className="container">
-                <div className="search-bar">
-                    <input type="text" placeholder="Enter ingredients..." />
-                    <button className="search-button">Search Recipes</button>
-                </div>
-
-                <div className="recipe-grid">
-                    <div class="recipe-card">
-                        <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" />
-                        <h3>Recipe 1</h3>
-                        <p>A delightful recipe using your selected ingredients.</p>
-                        <button>View Details</button>
-                    </div>
-
-                    <div className="recipe-card">
-                        <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" />
-                        <h3>Recipe 2</h3>
-                        <p>A quick, easy and tasty meal to try today!</p>
-                        <button>View Details</button>
-                    </div>
-
-                    <div className="recipe-card">
-                        <img src="https://images.pexels.com/photos/691114/pexels-photo-691114.jpeg" alt="Recipe Image" />
-                        <h3>Recipe 3</h3>
-                        <p>An exciting new dish perfect for any occasion.</p>
-                        <button>View Details</button>
-                    </div>
-                </div>
+            <div className="recipe-grid">
+                {recipes.map((recipe, index) => (
+                    <RecipeCard key={index} recipe={recipe} />
+                ))}
             </div>
         </div>
     )
