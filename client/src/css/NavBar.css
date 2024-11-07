@@ -1,0 +1,27 @@
+.navbar {
+    background-color: var(--green);
+    padding: 10px;
+    text-align: center;
+    align-items: center;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.title{
+    font-size: 30px;
+    margin: 25px;
+    font-family: var(--font-family);
+}
+
+.logout {
+    background-color: var(--red);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}

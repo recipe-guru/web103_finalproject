@@ -1,11 +1,15 @@
 import AppRoutes from './routes/AppRoutes';
 import { UserProvider } from './context/UserContext';
 import './App.css';
+import NavBar from './components/NavBar';
 
 function App() {
   return (
     <UserProvider>
-      <AppRoutes />
+      <div className="app">
+        <NavBar />
+        <AppRoutes />
+      </div>
     </UserProvider>
   );
 }

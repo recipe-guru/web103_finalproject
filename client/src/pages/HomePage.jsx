@@ -3,10 +3,6 @@ import '../css/HomePage.css'
 export default function HomePage() {
     return (
         <div>
-            <div className="navbar">
-                <h1>Recipe Guru</h1>
-            </div>
-
             <div className="container">
                 <div className="welcome">
                     Welcome, <strong>John!</strong> Ready to find your next favorite recipe?
